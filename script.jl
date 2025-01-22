@@ -1,7 +1,7 @@
-using Polynomials
-using LinearAlgebra
 using Krylov
+using LinearAlgebra
 using Plots
+using SparseArrays
 
 vals = [2,7]
 A = diagm(vals)
@@ -34,19 +34,23 @@ for iter in 1:maxiter
 end
 scatter!(res_xs, res_ys)
 
-# scatter(vals, [0,0])
+b = rand(20)
 
-# function get_ith_Tpoly(i)
-#   coeffs = zeros(i+1)
-#   coeffs[end] = 1
-#   return Polynomials.ChebyshevT(coeffs)
-# end
+A = diagm(vcat(5*ones(10), 100*ones(10)))
+cg(A, b)
 
-# T = get_ith_Tpoly(2)
+A = diagm(range(4.99, 5.01, length=20))
+cg(A, b)
 
-# xs = range(-0.5, 7.5, length=500)
+A = diagm(range(5, 100, length=20))
+cg(A, b)
 
-# top_input = (7 .+ 2 .- 2 .* xs) ./ (7 .- 2)
-# denom = Polynomials.evalpoly((7 + 2) / (7 - 2), T, false)
+A = diagm(range(99.99, 100.01, length=20))
+cg(A, b)
 
-# plot!(xs, Polynomials.evalpoly.(top_input, T, false) ./ denom)
+A = diagm(range(5, 100, length=20))
+
+Q,_ = qr(rand(20,20))
+rotA = Q'*A*Q
+eigvals(rotA)
+cg(rotA, b)
